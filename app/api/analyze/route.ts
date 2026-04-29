@@ -1,7 +1,6 @@
 export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { analyzeProductImage } from '@/lib/gemini'
-import { convertToPng, bufferToBase64 } from '@/lib/image-utils'
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,14 +9,11 @@ export async function POST(req: NextRequest) {
     if (!file) return NextResponse.json({ error: 'No image provided' }, { status: 400 })
 
     const arrayBuffer = await file.arrayBuffer()
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let buffer = Buffer.from(arrayBuffer as any)
+    const buffer = Buffer.from(new Uint8Array(arrayBuffer))
+    const base64 = buffer.toString('base64')
+    const mimeType = file.type || 'image/jpeg'
 
-    // Convert any format to PNG
-    buffer = await convertToPng(buffer)
-    const base64 = await bufferToBase64(buffer)
-
-    const analysis = await analyzeProductImage(base64, 'image/png')
+    const analysis = await analyzeProductImage(base64, mimeType)
     return NextResponse.json({ analysis, imageBase64: base64 })
   } catch (error) {
     console.error('Analyze error:', error)
