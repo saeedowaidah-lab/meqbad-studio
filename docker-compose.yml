@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - HUGGING_FACE_TOKEN=${HUGGING_FACE_TOKEN}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - REMBG_SERVICE_URL=http://rembg:8000
+    depends_on:
+      - rembg
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+
+  rembg:
+    build: ./rembg-service
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    volumes:
+      - rembg_models:/root/.u2net
+
+volumes:
+  rembg_models:
