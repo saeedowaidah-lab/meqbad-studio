@@ -10,7 +10,7 @@ function getClient() {
 
 export async function analyzeProductImage(imageBase64: string, mimeType: string): Promise<GeminiAnalysis> {
   const genAI = getClient()
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' })
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-preview-04-17' })
 
   const prompt = `You are an expert product photographer and e-commerce specialist for door handles.
 Analyze this door handle image and return ONLY valid JSON with this exact structure:
@@ -39,7 +39,7 @@ Be precise. Return only JSON, no markdown.`
 
 export async function qualityCheckImage(imageBase64: string, mimeType: string, context: string): Promise<QualityCheckResult> {
   const genAI = getClient()
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' })
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-preview-04-17' })
 
   const prompt = `You are a product photography quality inspector for e-commerce.
 Context: ${context}
@@ -68,7 +68,7 @@ Score 1-10. passed=true if score >= 7. Return only JSON.`
 
 export async function translateToFluxPrompt(userRequest: string, analysis: GeminiAnalysis): Promise<string> {
   const genAI = getClient()
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' })
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-preview-04-17' })
 
   const prompt = `You are an expert at writing prompts for FLUX.1-dev image generation model.
 Product: ${analysis.material} door handle, ${analysis.style} style, ${analysis.finish} finish.
